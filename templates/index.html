@@ -1,1 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Mini ChatGPT Multilingüe</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #1e1e1e;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      padding-top: 50px;
+    }
+
+    .chat-container {
+      background: #2b2b2b;
+      padding: 20px;
+      width: 600px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #000;
+    }
+
+    #chat-box {
+      height: 300px;
+      overflow-y: auto;
+      background: #111;
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+
+    input {
+      width: 80%;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+    }
+
+    button {
+      padding: 10px;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <h2>Mini ChatGPT</h2>
+    <div id="chat-box"></div>
+    <input type="text" id="user-input" placeholder="Escribe algo..." onkeypress="if(event.key === 'Enter') sendMessage()">
+    <button onclick="sendMessage()">Enviar</button>
+  </div>
+
+  <script>
+    async function sendMessage() {
+      const input = document.getElementById("user-input");
+      const message = input.value.trim();
+      if (!message) return;
+
+      const chatBox = document.getElementById("chat-box");
+      chatBox.innerHTML += `<div><b>Tú:</b> ${message}</div>`;
+      input.value = "";
+
+      const res = await fetch("/chat", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({message})
+      });
+
+      const data = await res.json();
+      chatBox.innerHTML += `<div><b>IA:</b> ${data.response}</div>`;
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+  </script>
+</body>
+</html>
 
